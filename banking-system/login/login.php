@@ -1,8 +1,6 @@
 <?php
 
-require_once 'login/users.php';
-
-
+require_once 'users/users.php';
 class Login
 {
 
@@ -26,9 +24,14 @@ class Login
     {
         $attemps = 0;
         $username = readline("Please enter a username: ");
-        $password = readline("Please enter a password: ");
         $user = User::getByUsername($username);
 
+        if (!$user) {
+            echo "User not found.\n";
+            return false;
+        }
+
+        $password = readline("Please enter a password: ");
         while ($user['password'] !== $password) {
             $attemps++;
             if ($attemps === 3) {
@@ -46,10 +49,11 @@ class Login
         }
 
         echo "Welcome " . $username . "!\n";
-        return new User($user['username'], $user['password'], $user['is_locked']);
+        return new User($user['username'], $user['password'], $user['is_locked'], $user['balance']);
     }
 
-    public static function SignUp(){
+    public static function SignUp()
+    {
         return User::create();
     }
 }

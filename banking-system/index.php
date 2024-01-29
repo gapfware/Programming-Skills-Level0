@@ -1,9 +1,8 @@
 <?php
 
-require_once 'login/users.php';
+require_once 'users/users.php';
 require_once 'login/login.php';
-
-
+require_once 'users/account.php';
 
 while (true) {
     echo "1. Sign in\n";
@@ -15,6 +14,32 @@ while (true) {
             $user = Login::SignIn();
             if ($user) {
                 echo 'Success!';
+                while (true) {
+                    echo "1. Show balance\n";
+                    echo "2. Deposit\n";
+                    echo "3. Withdraw\n";
+                    echo "4. Transfer\n";
+                    echo "5. Sign out\n";
+                    $choice = readline("Enter your choice: ");
+                    switch ($choice) {
+                        case 1:
+                            Account::showBalance($user);
+                            break;
+                        case 2:
+                            Account::deposit($user);
+                            break;
+                        case 3:
+                            Account::withdraw($user);
+                            break;
+                        case 4:
+                            Account::transfer($user);
+                            break;
+                        case 5:
+                            exit;
+                        default:
+                            echo "Invalid choice.\n";
+                    }
+                }
             }
             break;
         case 2:

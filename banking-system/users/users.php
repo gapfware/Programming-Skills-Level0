@@ -1,24 +1,34 @@
 <?php
 
+$filepath = 'users/users.php';
+
 class User
 {
     private $username;
     private $password;
     private $isLocked;
+    private $balance;
 
-    public function __construct(string $username, string $password, bool $isLocked = false)
+
+    public function __construct(string $username, string $password, bool $isLocked = false, int $balance = 2000)
     {
         $this->username = $username;
         $this->password = $password;
         $this->isLocked = $isLocked;
+        $this->balance = $balance;
     }
 
-    /**
+    public static function getFilePath(): string
+    {
+        return 'users/users.json';
+    }
+
+    /**1
      * Get all users from the JSON file.
      */
     public static function getAll(): array
     {
-        $filename = "login/users.json";
+        $filename = User::getFilePath();
         $users = file_get_contents($filename);
         $users = json_decode($users, true);
         return $users;
@@ -29,13 +39,28 @@ class User
      */
     public static function save(User $user): void
     {
-        $filename = "login/users.json";
+        $filename = User::getFilePath();
         $users = self::getAll();
         $users[] = [
             'username' => $user->getUsername(),
             'password' => $user->getPassword(),
+            'balance' => $user->getBalance(),
             'is_locked' => $user->isLocked()
+
         ];
+        $users = json_encode($users);
+        file_put_contents($filename, $users);
+    }
+
+    public static function update(User $user): void
+    {
+        $filename = User::getFilePath();
+        $users = self::getAll();
+        foreach ($users as $key => $value) {
+            if ($value['username'] === $user->getUsername()) {
+                $users[$key]['balance'] = $user->getBalance();
+            }
+        }
         $users = json_encode($users);
         file_put_contents($filename, $users);
     }
@@ -65,14 +90,20 @@ class User
     }
 
     /**
-     * Lock the user.
+     * Get the balance.
      */
-    public function lock(): void
+    public function getBalance(): int
     {
-        $this->isLocked = true;
+        return $this->balance;
     }
 
-
+    /**
+     * Set the balance.
+     */
+    public function setBalance(int $balance): void
+    {
+        $this->balance = $balance;
+    }
 
     /**
      * Get a user by username.
