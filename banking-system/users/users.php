@@ -124,9 +124,13 @@ class User
      */
     public static function create(): ?User
     {
+        system('clear');
+        echo "Please enter your information.\n";
+        echo '--------------------------------' . PHP_EOL;
         $username = readline("Please enter a username: ");
         $password = readline("Please enter a password: ");
         $passwordVerification = readline("Please enter your password again: ");
+        echo '--------------------------------' . PHP_EOL;
 
         if ($password !== $passwordVerification) {
             echo "Passwords do not match. Please try again.\n";

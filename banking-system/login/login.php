@@ -23,6 +23,7 @@ class Login
     public static function SignIn(): User | bool
     {
         $attemps = 0;
+        system('clear');
         $username = readline("Please enter a username: ");
         $user = User::getByUsername($username);
 
